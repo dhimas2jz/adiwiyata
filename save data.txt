@@ -1,0 +1,68 @@
+					<li>
+                    	<a href="<?=base_url('page-admin/laporan/data.php')?>"><i class="glyphicon glyphicon-file"></i> Laporan</a>
+              		</li>
+
+
+
+
+
+
+						<th><center>No</center></th>
+						<th><center>Kode Pemesanan</center></th>
+						<th><center>Tanggal Pemesanan</center></th>
+						<th><center>Kode Kursi</enter></th>
+						<th><center>Tanggal Berangkat</center></th>
+						<th><center>Jam Berangkat</center></th>
+						<th><center>Total Bayar</center></th>
+						<th><center>Status</center></th>
+						<th><center>Verifikasi</center></th>
+						<th><center>Edit</center></th>
+						<th><center>Delete</center></th>
+
+
+
+<?php
+require_once "../../_config/config.php";
+require "../../_assets/libs/vendor/autoload.php";
+
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+
+if(isset($_POST['add'])) {
+	$uuid = Uuid::uuid4()->toString();
+	$nama_pohon = trim(mysqli_real_escape_string($con, $_POST['nama_pohon']));
+	$nama_latin = trim(mysqli_real_escape_string($con, $_POST['nama_latin']));
+	$deskripsi = trim(mysqli_real_escape_string($con, $_POST['deskripsi']));
+	$manfaat = trim(mysqli_real_escape_string($con, $_POST['manfaat']));
+	$tahun_tanam = trim(mysqli_real_escape_string($con, $_POST['tahun_tanam']));
+	$jumlah = trim(mysqli_real_escape_string($con, $_POST['jumlah']));
+	$luas = trim(mysqli_real_escape_string($con, $_POST['luas']));
+	$gambar = trim(mysqli_real_escape_string($con, $_POST['gambar']));
+	$qr_code = trim(mysqli_real_escape_string($con, $_POST['qr_code']));
+	$sql_cek_identitas = mysqli_query($con, "SELECT * FROM tb_tanamanhias WHERE nama_pohon = '$nama_pohon' ") or die (mysqli_error($con));
+	if(mysqli_num_rows($sql_cek_identitas) > 0) {
+		echo "<script>alert('Pohon ini sudah pernah di pakai!'); window.location='add.php';</script>";
+	} else {
+		mysqli_query($con, "INSERT INTO tb_tanamanhias (id_tanamanhias, nama_pohon, nama_latin, deskripsi, manfaat, tahun_tanam, jumlah, luas, gambar, qr_code) VALUES ('$uuid', '$nama_pohon', '$nama_latin', '$deskripsi', '$manfaat', '$tahun_tanam', '$jumlah', '$luas', '$gambar', '$qr_code')") or die (mysqli_error($con));
+		echo "<script>window.location='data.php';</script>";
+	} 
+} else if(isset($_POST['edit'])) {
+	$id = $_POST['id'];
+	$nama_pohon = trim(mysqli_real_escape_string($con, $_POST['nama_pohon']));
+	$nama_latin = trim(mysqli_real_escape_string($con, $_POST['nama_latin']));
+	$deskripsi = trim(mysqli_real_escape_string($con, $_POST['deskripsi']));
+	$manfaat = trim(mysqli_real_escape_string($con, $_POST['manfaat']));
+	$tahun_tanam = trim(mysqli_real_escape_string($con, $_POST['tahun_tanam']));
+	$jumlah = trim(mysqli_real_escape_string($con, $_POST['jumlah']));
+	$luas = trim(mysqli_real_escape_string($con, $_POST['luas']));
+	$gambar = trim(mysqli_real_escape_string($con, $_POST['gambar']));
+	$qr_code = trim(mysqli_real_escape_string($con, $_POST['qr_code']));
+	mysqli_query($con, "UPDATE tb_tanamanhias SET nama_pohon = '$nama_pohon', nama_latin = '$nama_latin', deskripsi = '$deskripsi', manfaat = '$manfaat', tahun_tanam = '$tahun_tanam', jumlah = '$jumlah', luas = '$luas', gambar = '$gambar', qr_code = '$qr_code' WHERE id_tanamanhias = '$id'") or die (mysqli_error($con));
+	echo "<script>window.location='data.php';</script>";
+}
+?>
+
+
+										<li>
+                      <a href="<?=base_url('page-admin/petugas/data.php')?>"><i class="glyphicon glyphicon-user"></i> Petugas</a>
+                    </li>
